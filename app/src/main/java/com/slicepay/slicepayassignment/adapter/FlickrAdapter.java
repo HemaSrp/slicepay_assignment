@@ -42,7 +42,7 @@ public abstract class FlickrAdapter extends RecyclerView.Adapter<FlickrAdapter.M
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.single_photo_view, parent, false);
+                .inflate(R.layout.recycler_photo_view, parent, false);
 
         return new MyViewHolder(itemView);
     }

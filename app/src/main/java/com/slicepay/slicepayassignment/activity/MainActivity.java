@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements PhotoFetchListner
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.flickr_activity);
+        setContentView(R.layout.activity_main);
         loadMoreItem = new ArrayList<>();
         recyclerView = findViewById(R.id.recycler_view);
         db = new DataBaseHandler(this);
