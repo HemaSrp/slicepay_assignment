@@ -22,20 +22,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by hema on 29/1/18.
+ * This class is used to set the adapter for recyclerview.
  */
 
-public abstract class FlickrAdapter extends RecyclerView.Adapter<FlickrAdapter.MyViewHolder> implements Filterable {
+public class FlickrAdapter extends RecyclerView.Adapter<FlickrAdapter.MyViewHolder> implements Filterable {
 
     private final Activity activity;
-    private final List<Photo> moviesList;
+    private final List<Photo> photoList;
     private List<Photo> photoListFiltered;
 
-
-    public FlickrAdapter(Activity mainActivity, List<Photo> moviesList) {
+    public FlickrAdapter(Activity mainActivity, List<Photo> photoList) {
         this.activity = mainActivity;
-        this.moviesList = moviesList;
-        this.photoListFiltered = moviesList;
+        this.photoList = photoList;
+        this.photoListFiltered = photoList;
     }
 
     @Override
@@ -49,9 +48,9 @@ public abstract class FlickrAdapter extends RecyclerView.Adapter<FlickrAdapter.M
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
 
-        Photo movie = photoListFiltered.get(position);
-        holder.txtTitle.setText(movie.getTitle());
-        String img = movie.getPhotoURL();
+        Photo photo = photoListFiltered.get(position);
+        holder.txtTitle.setText(photo.getTitle());
+        String img = photo.getPhotoURL();
 
         Glide.with(activity).load(img).asBitmap().placeholder(R.drawable.flickr_logo).dontAnimate().into(new BitmapImageViewTarget(holder.mPhoto) {
             @Override
@@ -66,7 +65,11 @@ public abstract class FlickrAdapter extends RecyclerView.Adapter<FlickrAdapter.M
 
     @Override
     public int getItemCount() {
-        return photoListFiltered.size();
+        int size = 0;
+        if (photoListFiltered != null) {
+            size = photoListFiltered.size();
+        }
+        return size;
     }
 
     @Override
@@ -76,10 +79,10 @@ public abstract class FlickrAdapter extends RecyclerView.Adapter<FlickrAdapter.M
             protected FilterResults performFiltering(CharSequence charSequence) {
                 String charString = charSequence.toString();
                 if (charString.isEmpty()) {
-                    photoListFiltered = moviesList;
+                    photoListFiltered = photoList;
                 } else {
                     List<Photo> filteredList = new ArrayList<>();
-                    for (Photo row : moviesList) {
+                    for (Photo row : photoList) {
 
                         // name match condition. this might differ depending on your requirement
                         // here we are looking for name or phone number match
@@ -104,15 +107,13 @@ public abstract class FlickrAdapter extends RecyclerView.Adapter<FlickrAdapter.M
         };
     }
 
-    public abstract void load();
-
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public final TextView txtTitle;
         public final ImageView mPhoto;
 
         public MyViewHolder(View view) {
             super(view);
-            mPhoto = view.findViewById(R.id.title);
+            mPhoto = view.findViewById(R.id.flickr_image);
             txtTitle = view.findViewById(R.id.flickr_title);
 
         }

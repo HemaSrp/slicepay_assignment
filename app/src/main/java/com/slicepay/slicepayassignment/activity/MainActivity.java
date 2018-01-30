@@ -29,25 +29,33 @@ import java.util.List;
  */
 
 public class MainActivity extends AppCompatActivity implements PhotoFetchListner {
-    //Layout manager
-    private GridLayoutManager mLayoutManager;
+
+    //Database handler
     private DataBaseHandler db;
+
+    //Recyclerview
     private RecyclerView recyclerView;
+
+    //Recyclerview adapter
     private FlickrAdapter mAdapter;
+
+    //Searchview
     private SearchView searchView;
+
+    //Photos list
     private List<Photo> allPhotos;
-    private List<Photo> loadMoreItem;
+
+    //GridLayout manager
+    private GridLayoutManager mLayoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        loadMoreItem = new ArrayList<>();
         recyclerView = findViewById(R.id.recycler_view);
         db = new DataBaseHandler(this);
         if (savedInstanceState != null) {
             allPhotos = savedInstanceState.getParcelableArrayList("photosList");
-            loadMoreItem = savedInstanceState.getParcelableArrayList("loadMoreItem");
             setRecyclerView(allPhotos);
         } else {
             getFeedFromDatabase();
@@ -58,7 +66,6 @@ public class MainActivity extends AppCompatActivity implements PhotoFetchListner
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList("photosList", (ArrayList<? extends Parcelable>) allPhotos);
-        outState.putParcelableArrayList("loadMoreItem", (ArrayList<? extends Parcelable>) loadMoreItem);
     }
 
 
@@ -66,34 +73,25 @@ public class MainActivity extends AppCompatActivity implements PhotoFetchListner
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         allPhotos = savedInstanceState.getParcelableArrayList("photosList");
-        loadMoreItem = savedInstanceState.getParcelableArrayList("loadMoreItem");
     }
-
     @Override
     public void onDeliverAllPhotos(List<Photo> photos) {
         allPhotos = photos;
-        for (int i = 0; i < photos.size() - 20; i++)
-            loadMoreItem.add(photos.get(i));
-        setRecyclerView(loadMoreItem);
+        setRecyclerView(allPhotos);
     }
 
+    /**
+     * This method is used to display the data from the table in adapter
+     *
+     * @param photos photoslist
+     */
     private void setRecyclerView(List<Photo> photos) {
-        mAdapter = new FlickrAdapter(this, photos) {
-
-            @Override
-            public void load() {
-                Photo lastItem = loadMoreItem.get(loadMoreItem.size() - 1);
-                int indexPosition = allPhotos.indexOf(lastItem);
-                for (int i = indexPosition + 1; i < allPhotos.size(); i++)
-                    loadMoreItem.add(allPhotos.get(i));
-
-            }
-        };
+        mAdapter = new FlickrAdapter(this, photos);
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            mLayoutManager = new GridLayoutManager(getApplicationContext(), 2);
+            mLayoutManager = new GridLayoutManager(getApplicationContext(),2);
         } else {
-            mLayoutManager = new GridLayoutManager(getApplicationContext(), 3);
+            mLayoutManager = new GridLayoutManager(getApplicationContext(),3);
         }
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -101,13 +99,17 @@ public class MainActivity extends AppCompatActivity implements PhotoFetchListner
         recyclerView.setAdapter(mAdapter);
     }
 
+
+
     @Override
     public void onHideDialog() {
-
+        //Hide dialog
     }
 
+    /**
+     * THis method is used to fetch the photos
+     */
     private void getFeedFromDatabase() {
-
         db.fetchPhotos(this);
     }
 
