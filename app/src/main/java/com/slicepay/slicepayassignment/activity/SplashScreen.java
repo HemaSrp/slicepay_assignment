@@ -26,14 +26,13 @@ public class SplashScreen extends AppCompatActivity {
     private SOSInterface mService;
     private DataBaseHandler db;
     private TextView txtLoadingPercentage;
-    private TextView txtLoading;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
         txtLoadingPercentage = findViewById(R.id.loadingPercentage);
-        txtLoading = findViewById(R.id.loading);
+        TextView txtLoading = findViewById(R.id.loading);
         mService = ApiUtils.getSOService();
         db = new DataBaseHandler(this);
         db.deleteRecord();
@@ -45,19 +44,19 @@ public class SplashScreen extends AppCompatActivity {
         if (MyApplication.isNetworkAvailable(this)) {
             loadAnswers();
         } else {
-            txtLoading.setText("Please check internet connection...");
+            txtLoading.setText(getResources().getString(R.string.check_internet_connection));
         }
     }
 
-    public void loadAnswers() {
+    private void loadAnswers() {
         mService.getAnswers().enqueue(new Callback<Flickr>() {
             @Override
             public void onResponse(Call<Flickr> call, Response<Flickr> response) {
-                txtLoadingPercentage.setText("30%");
+                txtLoadingPercentage.setText(getResources().getString(R.string.thirty_percentage));
                 List<Photo> photo = response.body().getPhotos().getPhoto();
                 for (int i = 0; i < photo.size(); i++)
                     db.addPhoto(photo.get(i));
-                txtLoadingPercentage.setText("60%");
+                txtLoadingPercentage.setText(getResources().getString(R.string.sixty_percentage));
 
                 List<Photo> listPhotos = db.getAllContacts();
                 for (int j = 0; listPhotos.size() > j; j++) {
@@ -65,7 +64,7 @@ public class SplashScreen extends AppCompatActivity {
                     PictureAsyncTask task = new PictureAsyncTask(db);
                     task.execute(flickrPhoto);
                 }
-                txtLoadingPercentage.setText("100%");
+                txtLoadingPercentage.setText(getResources().getString(R.string.hundread_percentage));
                 finish();
                 Intent a = new Intent(SplashScreen.this, MainActivity.class);
                 startActivity(a);

@@ -33,7 +33,7 @@ public class Photo implements Parcelable {
 
     }
 
-    protected Photo(Parcel in) {
+    private Photo(Parcel in) {
         //retrieve
         this.id = in.readString();
         this.title = in.readString();
@@ -47,13 +47,6 @@ public class Photo implements Parcelable {
         in.readByteArray(photoImg);
     }
 
-    public String getIsfamily() {
-        return isfamily;
-    }
-
-    public void setIsfamily(String isfamily) {
-        this.isfamily = isfamily;
-    }
 
     public String getFarm() {
         return farm;
@@ -77,14 +70,6 @@ public class Photo implements Parcelable {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public String getIspublic() {
-        return ispublic;
-    }
-
-    public void setIspublic(String ispublic) {
-        this.ispublic = ispublic;
     }
 
     public String getOwner() {
@@ -111,13 +96,6 @@ public class Photo implements Parcelable {
         this.server = server;
     }
 
-    public String getIsfriend() {
-        return isfriend;
-    }
-
-    public void setIsfriend(String isfriend) {
-        this.isfriend = isfriend;
-    }
 
     @Override
     public String toString() {

@@ -24,9 +24,4 @@ public class MyApplication extends Application {
         bitmap.compress(Bitmap.CompressFormat.PNG, 0, byteArrayOutputStream);
         return byteArrayOutputStream.toByteArray();
     }
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-    }
 }

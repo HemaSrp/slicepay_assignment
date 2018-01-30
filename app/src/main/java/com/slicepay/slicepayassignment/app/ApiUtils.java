@@ -9,7 +9,7 @@ import com.slicepay.slicepayassignment.restclient.SOSInterface;
 
 public class ApiUtils {
 
-    public static final String BASE_URL = "https://api.flickr.com";
+    private static final String BASE_URL = "https://api.flickr.com";
 
     public static SOSInterface getSOService() {
         return RestClient.getClient(BASE_URL).create(SOSInterface.class);

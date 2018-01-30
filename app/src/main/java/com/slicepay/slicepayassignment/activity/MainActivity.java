@@ -29,7 +29,7 @@ import java.util.List;
  */
 
 public class MainActivity extends AppCompatActivity implements PhotoFetchListner {
-    GridLayoutManager mLayoutManager;
+    private GridLayoutManager mLayoutManager;
     private DataBaseHandler db;
     private RecyclerView recyclerView;
     private FlickrAdapter mAdapter;
@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements PhotoFetchListner
     @Override
     public void onDeliverAllPhotos(List<Photo> photos) {
         allPhotos = photos;
-        for (int i = 0; i < photos.size() - 25; i++)
+        for (int i = 0; i < photos.size() - 20; i++)
             loadMoreItem.add(photos.get(i));
         setRecyclerView(loadMoreItem);
     }
@@ -98,11 +98,6 @@ public class MainActivity extends AppCompatActivity implements PhotoFetchListner
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.addItemDecoration(new SeperateDecoration(this, ContextCompat.getColor(this, R.color.white), 10.0f));
         recyclerView.setAdapter(mAdapter);
-    }
-
-    @Override
-    public void onDeliverPhoto(Photo flower) {
-
     }
 
     @Override

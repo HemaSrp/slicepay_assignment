@@ -12,8 +12,6 @@ public interface PhotoFetchListner {
 
     void onDeliverAllPhotos(List<Photo> flowers);
 
-    void onDeliverPhoto(Photo flower);
-
     void onHideDialog();
 }
 

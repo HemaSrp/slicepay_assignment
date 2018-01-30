@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,9 +27,9 @@ import java.util.List;
 
 public abstract class FlickrAdapter extends RecyclerView.Adapter<FlickrAdapter.MyViewHolder> implements Filterable {
 
-    private Activity activity;
+    private final Activity activity;
+    private final List<Photo> moviesList;
     private List<Photo> photoListFiltered;
-    private List<Photo> moviesList;
 
 
     public FlickrAdapter(Activity mainActivity, List<Photo> moviesList) {
@@ -49,12 +48,9 @@ public abstract class FlickrAdapter extends RecyclerView.Adapter<FlickrAdapter.M
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
-        if ((position >= getItemCount() - 1))
-            load();
+
         Photo movie = photoListFiltered.get(position);
         holder.txtTitle.setText(movie.getTitle());
-        Log.e("befw", movie.getPhotoImg() + "");
-        byte[] photoImg = movie.getPhotoImg();
         String img = movie.getPhotoURL();
 
         Glide.with(activity).load(img).asBitmap().placeholder(R.drawable.flickr_logo).dontAnimate().into(new BitmapImageViewTarget(holder.mPhoto) {
@@ -111,8 +107,8 @@ public abstract class FlickrAdapter extends RecyclerView.Adapter<FlickrAdapter.M
     public abstract void load();
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView txtTitle;
-        public ImageView mPhoto;
+        public final TextView txtTitle;
+        public final ImageView mPhoto;
 
         public MyViewHolder(View view) {
             super(view);

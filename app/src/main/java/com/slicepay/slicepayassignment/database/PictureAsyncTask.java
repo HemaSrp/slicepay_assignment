@@ -16,17 +16,12 @@ import java.net.URL;
  */
 
 public class PictureAsyncTask extends AsyncTask<Photo, Void, Void> {
-    DataBaseHandler db;
+    private final DataBaseHandler db;
 
     public PictureAsyncTask(DataBaseHandler db) {
         this.db = db;
     }
 
-    // can use UI thread here
-    @Override
-    protected void onPreExecute() {
-        super.onPreExecute();
-    }
 
     // automatically done on worker thread (separate from UI thread)
     @Override

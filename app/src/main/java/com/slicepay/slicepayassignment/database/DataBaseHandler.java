@@ -95,7 +95,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
 
     // Getting All Contacts
     public List<Photo> getAllContacts() {
-        List<Photo> contactList = new ArrayList<Photo>();
+        List<Photo> contactList = new ArrayList<>();
         // Select All Query
         String selectQuery = "SELECT  * FROM " + PHOTO_DETAILS;
 
@@ -146,9 +146,9 @@ public class DataBaseHandler extends SQLiteOpenHelper {
 
     public class FlowerFetcher extends Thread {
 
+        final String selectQuery = "SELECT  * FROM " + PHOTO_DETAILS + " ORDER BY TITLE";
         private final PhotoFetchListner mListener;
         private final SQLiteDatabase mDb;
-        String selectQuery = "SELECT  * FROM " + PHOTO_DETAILS + " ORDER BY TITLE";
 
 
         public FlowerFetcher(PhotoFetchListner listener, SQLiteDatabase db) {
@@ -176,7 +176,6 @@ public class DataBaseHandler extends SQLiteOpenHelper {
                         contact.setPhotoURL(cursor.getString(6));
                         contact.setPhotoImg(cursor.getBlob(7));
                         flowerList.add(contact);
-                        publishFlower(contact);
 
                     } while (cursor.moveToNext());
                 }
@@ -187,16 +186,6 @@ public class DataBaseHandler extends SQLiteOpenHelper {
                 public void run() {
                     mListener.onDeliverAllPhotos(flowerList);
                     mListener.onHideDialog();
-                }
-            });
-        }
-
-        public void publishFlower(final Photo flower) {
-            Handler handler = new Handler(Looper.getMainLooper());
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    mListener.onDeliverPhoto(flower);
                 }
             });
         }

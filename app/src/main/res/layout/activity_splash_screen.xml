@@ -11,6 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="220dp"
         android:layout_centerInParent="true"
+        android:contentDescription="@string/flickr_logo"
         android:src="@drawable/flickr_logo" />
 
 
@@ -20,7 +21,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/imgFlickrLogo"
         android:layout_centerHorizontal="true"
-        android:text="Loading...Please wait...."
+        android:text="@string/loading_please_wait"
         android:textColor="#FF000000"
         android:textSize="14sp" />
 
@@ -31,7 +32,7 @@
         android:layout_below="@+id/loading"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="5dp"
-        android:text="0%"
+        android:text="@string/percentage"
         android:textColor="@color/pink"
         android:textSize="14sp" />
 
