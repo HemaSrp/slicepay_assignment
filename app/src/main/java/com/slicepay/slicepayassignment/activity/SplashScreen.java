@@ -2,6 +2,7 @@ package com.slicepay.slicepayassignment.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.WindowManager;
 import android.widget.TextView;
@@ -15,6 +16,7 @@ import com.slicepay.slicepayassignment.model.FlickrResponse;
 import com.slicepay.slicepayassignment.model.Photo;
 import com.slicepay.slicepayassignment.restclient.SOSInterface;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -34,6 +36,9 @@ public class SplashScreen extends AppCompatActivity {
     //Loading percentage of the API
     private TextView txtLoadingPercentage;
 
+    //PhotoList
+    private List<Photo> photoList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,11 +53,19 @@ public class SplashScreen extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         //to remove the action bar (title bar)
         getSupportActionBar().hide();
-        if (MyApplication.isNetworkAvailable(this)) {
-            loadFlickrApi();
+        if (savedInstanceState != null) {
+            photoList = savedInstanceState.getParcelableArrayList("photosList");
+            txtLoadingPercentage.setText(getResources().getString(R.string.thirty_percentage));
+            loadingInDatabase(photoList);
         } else {
-            txtLoading.setText(getResources().getString(R.string.check_internet_connection));
+            if (MyApplication.isNetworkAvailable(this)) {
+                loadFlickrApi();
+            } else {
+                txtLoading.setText(getResources().getString(R.string.check_internet_connection));
+            }
         }
+
+
     }
 
     /**
@@ -63,25 +76,9 @@ public class SplashScreen extends AppCompatActivity {
             @Override
             public void onResponse(Call<FlickrResponse> call, Response<FlickrResponse> response) {
                 txtLoadingPercentage.setText(getResources().getString(R.string.thirty_percentage));
-                List<Photo> photo = response.body().getPhotos().getPhoto();
-                if (!photo.isEmpty()) {
-                    for (int i = 0; i < photo.size(); i++)
-                        db.insertPhoto(photo.get(i));
-                    txtLoadingPercentage.setText(getResources().getString(R.string.sixty_percentage));
+                photoList = response.body().getPhotos().getPhoto();
+                loadingInDatabase(photoList);
 
-                    List<Photo> listPhotos = db.getAllDetails();
-                    for (int j = 0; listPhotos.size() > j; j++) {
-                        Photo flickrPhoto = listPhotos.get(j);
-                        PictureAsyncTask task = new PictureAsyncTask(db);
-                        task.execute(flickrPhoto);
-                    }
-                    txtLoadingPercentage.setText(getResources().getString(R.string.hundread_percentage));
-                    finish();
-                    Intent a = new Intent(SplashScreen.this, MainActivity.class);
-                    startActivity(a);
-                } else {
-                    Toast.makeText(SplashScreen.this, "Error loading from API", Toast.LENGTH_LONG).show();
-                }
             }
 
             @Override
@@ -89,5 +86,43 @@ public class SplashScreen extends AppCompatActivity {
                 Toast.makeText(SplashScreen.this, "Error loading from API", Toast.LENGTH_LONG).show();
             }
         });
+    }
+
+    /**
+     * This method is get the response from API and set in db
+     *
+     * @param photoList
+     */
+    private void loadingInDatabase(List<Photo> photoList) {
+        if (photoList != null && !photoList.isEmpty()) {
+            for (int i = 0; i < this.photoList.size(); i++)
+                db.insertPhoto(this.photoList.get(i));
+            txtLoadingPercentage.setText(getResources().getString(R.string.sixty_percentage));
+
+            List<Photo> listPhotos = db.getAllDetails();
+            for (int j = 0; listPhotos.size() > j; j++) {
+                Photo flickrPhoto = listPhotos.get(j);
+                PictureAsyncTask task = new PictureAsyncTask(db);
+                task.execute(flickrPhoto);
+            }
+            txtLoadingPercentage.setText(getResources().getString(R.string.hundread_percentage));
+            finish();
+            Intent a = new Intent(SplashScreen.this, MainActivity.class);
+            startActivity(a);
+        }
+    }
+
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList("photosList", (ArrayList<? extends Parcelable>) photoList);
+    }
+
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        photoList = savedInstanceState.getParcelableArrayList("photosList");
     }
 }
