@@ -16,7 +16,7 @@ import android.view.MenuItem;
 
 import com.slicepay.slicepayassignment.R;
 import com.slicepay.slicepayassignment.adapter.FlickrAdapter;
-import com.slicepay.slicepayassignment.app.SeperateDecoration;
+import com.slicepay.slicepayassignment.app.SeperatorDecoration;
 import com.slicepay.slicepayassignment.database.DataBaseHandler;
 import com.slicepay.slicepayassignment.database.PhotoFetchListner;
 import com.slicepay.slicepayassignment.model.Photo;
@@ -25,10 +25,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by hema on 29/1/18.
+ * This class is used to display the flickr live photos from database and set it in recycler view.
  */
 
 public class MainActivity extends AppCompatActivity implements PhotoFetchListner {
+    //Layout manager
     private GridLayoutManager mLayoutManager;
     private DataBaseHandler db;
     private RecyclerView recyclerView;
@@ -96,7 +97,7 @@ public class MainActivity extends AppCompatActivity implements PhotoFetchListner
         }
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.addItemDecoration(new SeperateDecoration(this, ContextCompat.getColor(this, R.color.white), 10.0f));
+        recyclerView.addItemDecoration(new SeperatorDecoration(this, ContextCompat.getColor(this, R.color.white), 10.0f));
         recyclerView.setAdapter(mAdapter);
     }
 

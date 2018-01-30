@@ -12,10 +12,10 @@ import android.util.TypedValue;
 import android.view.View;
 
 /**
- * Created by hema on 29/1/18.
+ * This class is decorate the divider line in recyclerview
  */
 
-public class SeperateDecoration extends RecyclerView.ItemDecoration {
+public class SeperatorDecoration extends RecyclerView.ItemDecoration {
 
     private final Paint mPaint;
 
@@ -26,8 +26,8 @@ public class SeperateDecoration extends RecyclerView.ItemDecoration {
      * @param color    the color of the separator to draw.
      * @param heightDp the height of the separator in dp.
      */
-    public SeperateDecoration(@NonNull Context context, @ColorInt int color,
-                              @FloatRange(from = 0, fromInclusive = false) float heightDp) {
+    public SeperatorDecoration(@NonNull Context context, @ColorInt int color,
+                               @FloatRange(from = 0, fromInclusive = false) float heightDp) {
         mPaint = new Paint();
         mPaint.setColor(color);
         final float thickness = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,

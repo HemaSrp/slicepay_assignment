@@ -6,12 +6,12 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
- * Created by hema on 27/1/18.
+ * This is restclient used to communicate with the server.
  */
 
 public class RestClient {
 
-    private static Retrofit retrofit = null;
+    public static Retrofit retrofit = null;
 
     public static Retrofit getClient(String baseUrl) {
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();

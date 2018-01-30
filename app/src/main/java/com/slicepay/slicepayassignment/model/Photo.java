@@ -4,10 +4,11 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- * Created by hema on 27/1/18.
+ * This class is used to set and get the response details
  */
 
 public class Photo implements Parcelable {
+
     public static final Parcelable.Creator<Photo> CREATOR = new Parcelable.Creator<Photo>() {
         public Photo createFromParcel(Parcel source) {
             return new Photo(source);
@@ -125,7 +126,6 @@ public class Photo implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-
         //write
         dest.writeString(this.id);
         dest.writeString(this.title);
@@ -137,9 +137,6 @@ public class Photo implements Parcelable {
         dest.writeString(this.photoURL);
         dest.writeInt(photoImg.length);
         dest.writeByteArray(photoImg);
-
-
     }
-
 
 }

@@ -14,36 +14,42 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by hema on 27/1/18.
+ * This class is used to create the database,table,delete,update,insert the record.
  */
 
 public class DataBaseHandler extends SQLiteOpenHelper {
 
-    // All Static variables
     // Database Version
     private static final int DATABASE_VERSION = 1;
 
     // Database Name
     private static final String DATABASE_NAME = "Flickrmanager";
 
-    // Flickr table name
+    // Table name
     private static final String PHOTO_DETAILS = "PhotoDetails";
 
-    // Flickr table name
+    // Photo id
     private static final String PHOTO_ID = "PhotoId";
-    // Flickr table name
+
+    // Owner id
     private static final String OWNER_ID = "OwnerId";
-    // Flickr table name
+
+    //Secret id
     private static final String SECRET_ID = "SecretId";
-    // Flickr table name
+
+    //Server id
     private static final String SERVER_ID = "ServerId";
-    // Flickr table name
+
+    // Farm
     private static final String FARM = "Farm";
-    // Flickr table name
+
+    // Title
     private static final String TITLE = "Title";
-    // Flickr table name
+
+    // Photo
     private static final String PHOTO = "Photo";
 
+    //Photo url
     private static final String PHOTO_URL = "photo_url";
 
     public DataBaseHandler(Context context) {
@@ -77,14 +83,19 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         onCreate(sqLiteDatabase);
     }
 
-    public void addPhoto(Photo photo) {
-        SQLiteDatabase db = this.getWritableDatabase();
+    /**
+     * This method is used to insert the photo in table.
+     *
+     * @param photo object
+     */
 
+    public void insertPhoto(Photo photo) {
+        SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(OWNER_ID, photo.getOwner());
-        values.put(PHOTO_ID, photo.getId()); // Contact Name
-        values.put(SERVER_ID, photo.getServer()); // Contact Phone Number
-        values.put(SECRET_ID, photo.getSecret()); // Contact Phone Number
+        values.put(PHOTO_ID, photo.getId());
+        values.put(SERVER_ID, photo.getServer());
+        values.put(SECRET_ID, photo.getSecret());
         values.put(PHOTO, "");
         values.put(FARM, photo.getFarm());
         values.put(TITLE, photo.getTitle());
@@ -93,9 +104,13 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         db.close(); // Closing database connection
     }
 
-    // Getting All Contacts
-    public List<Photo> getAllContacts() {
-        List<Photo> contactList = new ArrayList<>();
+    /**
+     * This method is used to get all photos from the table
+     *
+     * @return
+     */
+    public List<Photo> getAllDetails() {
+        List<Photo> photosList = new ArrayList<>();
         // Select All Query
         String selectQuery = "SELECT  * FROM " + PHOTO_DETAILS;
 
@@ -104,54 +119,69 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
             do {
-                Photo contact = new Photo();
-                contact.setId(cursor.getString(0));
-                contact.setOwner(cursor.getString(1));
-                contact.setSecret(cursor.getString(2));
-                contact.setServer(cursor.getString(3));
-                contact.setFarm(cursor.getString(4));
-                contact.setTitle(cursor.getString(5));
-                contact.setPhotoURL(cursor.getString(6));
-                contact.setPhotoImg(cursor.getBlob(7));
-                // Adding contact to list
-                contactList.add(contact);
+                Photo photo = new Photo();
+                photo.setId(cursor.getString(0));
+                photo.setOwner(cursor.getString(1));
+                photo.setSecret(cursor.getString(2));
+                photo.setServer(cursor.getString(3));
+                photo.setFarm(cursor.getString(4));
+                photo.setTitle(cursor.getString(5));
+                photo.setPhotoURL(cursor.getString(6));
+                photo.setPhotoImg(cursor.getBlob(7));
+                photosList.add(photo);
             } while (cursor.moveToNext());
         }
 
-        // return contact list
-        return contactList;
+        // return photo list
+        return photosList;
     }
 
-    public int updateContact(Photo contact) {
+    /**
+     * This method is used to update the bitmap image in photo id
+     *
+     * @param photo
+     * @return 1
+     */
+    public int updateContact(Photo photo) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(PHOTO, contact.getPhotoImg());
+        values.put(PHOTO, photo.getPhotoImg());
 
         // updating row
         return db.update(PHOTO_DETAILS, values, PHOTO_ID + " = ?",
-                new String[]{String.valueOf(contact.getId())});
+                new String[]{String.valueOf(photo.getId())});
     }
 
-
+    /**
+     * This method is used to fetch the photos from the table
+     *
+     * @param listener
+     */
     public void fetchPhotos(PhotoFetchListner listener) {
-        FlowerFetcher fetcher = new FlowerFetcher(listener, this.getWritableDatabase());
+        PhotoFetcher fetcher = new PhotoFetcher(listener, this.getWritableDatabase());
         fetcher.start();
     }
 
+    /**
+     * This method is used to delete the record from db
+     */
     public void deleteRecord() {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(PHOTO_DETAILS, null, null);
     }
 
-    public class FlowerFetcher extends Thread {
+    /**
+     * This method is used to fetch the details from the table
+     */
+    public class PhotoFetcher extends Thread {
 
-        final String selectQuery = "SELECT  * FROM " + PHOTO_DETAILS + " ORDER BY TITLE";
+        final String selectQuery = "SELECT  * FROM " + PHOTO_DETAILS ;
         private final PhotoFetchListner mListener;
         private final SQLiteDatabase mDb;
 
 
-        public FlowerFetcher(PhotoFetchListner listener, SQLiteDatabase db) {
+        public PhotoFetcher(PhotoFetchListner listener, SQLiteDatabase db) {
             mListener = listener;
             mDb = db;
         }
@@ -160,31 +190,33 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         public void run() {
             Cursor cursor = mDb.rawQuery(selectQuery, null);
 
-            final List<Photo> flowerList = new ArrayList<>();
+            final List<Photo> photoList = new ArrayList<>();
 
             if (cursor.getCount() > 0) {
 
                 if (cursor.moveToFirst()) {
                     do {
-                        Photo contact = new Photo();
-                        contact.setId(cursor.getString(0));
-                        contact.setOwner(cursor.getString(1));
-                        contact.setSecret(cursor.getString(2));
-                        contact.setServer(cursor.getString(3));
-                        contact.setFarm(cursor.getString(4));
-                        contact.setTitle(cursor.getString(5));
-                        contact.setPhotoURL(cursor.getString(6));
-                        contact.setPhotoImg(cursor.getBlob(7));
-                        flowerList.add(contact);
+                        Photo photo = new Photo();
+                        photo.setId(cursor.getString(0));
+                        photo.setOwner(cursor.getString(1));
+                        photo.setSecret(cursor.getString(2));
+                        photo.setServer(cursor.getString(3));
+                        photo.setFarm(cursor.getString(4));
+                        photo.setTitle(cursor.getString(5));
+                        photo.setPhotoURL(cursor.getString(6));
+                        photo.setPhotoImg(cursor.getBlob(7));
+                        photoList.add(photo);
 
                     } while (cursor.moveToNext());
                 }
             }
+
+            //To interact with UI thread
             Handler handler = new Handler(Looper.getMainLooper());
             handler.post(new Runnable() {
                 @Override
                 public void run() {
-                    mListener.onDeliverAllPhotos(flowerList);
+                    mListener.onDeliverAllPhotos(photoList);
                     mListener.onHideDialog();
                 }
             });

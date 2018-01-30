@@ -1,20 +1,26 @@
 package com.slicepay.slicepayassignment.model;
 
 /**
- * Created by hema on 27/1/18.
+ * This class is used to set and get the response details
  */
 
-public class Flickr {
+public class FlickrResponse {
 
+    //Photos
     private Photos photos;
 
+    /**
+     * This class is sued to get the photos
+     *
+     * @return photos
+     */
     public Photos getPhotos() {
         return photos;
     }
 
     @Override
     public String toString() {
-        return "Flickr{" +
+        return "FlickrResponse{" +
                 "photos=" + photos +
                 '}';
     }
