@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">SlicePayAssignment</string>
+    <string name="search">Search</string>
+    <string name="loading_please_wait">Loading...Please wait....</string>
+    <string name="flickr_logo">flickr logo</string>
+    <string name="percentage">0%</string>
+    <string name="content_description_image">image</string>
+    <string name="check_internet_connection">"Please check internet connection..."</string>
+    <string name="thirty_percentage">"30%"</string>
+    <string name="sixty_percentage">"60%"</string>
+    <string name="hundread_percentage">"100%"</string>
+
 </resources>
